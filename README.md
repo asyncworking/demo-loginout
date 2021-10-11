@@ -39,19 +39,6 @@ environment:
       - POSTGRES_USER={username}
       - POSTGRES_PASSWORD={password}
 ```
-## Running the tests
-
- Run the automated tests for this system by following:
- 
- Gradle -> Tasks -> verification -> test
- 
- or use cli in terminal using following:
- 
- ```
- ./gradlew test
-
- ```
- it will automatically run checkStyle as the first step before run gradle test.
  
 ## And coding style tests
 

@@ -7,7 +7,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.gson.Gson;
 import io.jsonwebtoken.Jwts;
 import lombok.RequiredArgsConstructor;
-import lombok.SneakyThrows;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -16,13 +16,16 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 
 import javax.crypto.SecretKey;
 import javax.servlet.FilterChain;
+import javax.servlet.ServletInputStream;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
 import java.io.PrintWriter;
 import java.time.LocalDate;
 import java.util.Date;
 import java.util.Optional;
 
+@Slf4j
 @RequiredArgsConstructor
 public class JwtUsernameAndPasswordAuthFilter extends UsernamePasswordAuthenticationFilter {
 
@@ -31,10 +34,24 @@ public class JwtUsernameAndPasswordAuthFilter extends UsernamePasswordAuthentica
     private final UserRepository userRepository;
 
     @Override
-    @SneakyThrows
     public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response) {
 
-        AuthenticationRequest authenticationRequest = new ObjectMapper().readValue(request.getInputStream(), AuthenticationRequest.class);
+        ServletInputStream inputStream = null;
+        AuthenticationRequest authenticationRequest = null;
+
+        try {
+            inputStream = request.getInputStream();
+            authenticationRequest = new ObjectMapper().readValue(inputStream, AuthenticationRequest.class);
+        } catch (Exception e){
+            log.error("request inputStream error !!");
+        }finally {
+            try {
+                assert inputStream != null;
+                inputStream.close();
+            } catch (IOException e) {
+                log.error("failed close input stream");
+            }
+        }
 
         Authentication authentication = new UsernamePasswordAuthenticationToken(
                 authenticationRequest.getEmail(),
@@ -45,7 +62,6 @@ public class JwtUsernameAndPasswordAuthFilter extends UsernamePasswordAuthentica
     }
 
     @Override
-    @SneakyThrows
     protected void successfulAuthentication(HttpServletRequest request,
                                             HttpServletResponse response,
                                             FilterChain chain,
@@ -70,24 +86,42 @@ public class JwtUsernameAndPasswordAuthFilter extends UsernamePasswordAuthentica
                 .build();
         
         String userInfoDtoString = new Gson().toJson(userInfoDto);
-        PrintWriter out = response.getWriter();
-        response.setContentType("application/json");
-        response.setCharacterEncoding("UTF-8");
-        out.print(userInfoDtoString);
-        out.flush();
+        PrintWriter out = null;
+        try{
+            out = response.getWriter();
+            response.setContentType("application/json");
+            response.setCharacterEncoding("UTF-8");
+            out.print(userInfoDtoString);
+            out.flush();
+        } catch (Exception e){
+            log.error("user info io error!!");
+        } finally {
+            assert out != null;
+            out.close();
+        }
+
 
     }
 
     @Override
-    @SneakyThrows
     protected void unsuccessfulAuthentication(HttpServletRequest request, HttpServletResponse response,
                                               AuthenticationException failed) {
         String message = "Wrong password or user email";
-        PrintWriter out = response.getWriter();
-        response.setStatus(401);
-        response.setContentType("application/json");
-        response.setCharacterEncoding("UTF-8");
-        out.print(message);
-        out.flush();
+        PrintWriter out = null;
+        try {
+            out = response.getWriter();
+            response.setStatus(401);
+            response.setContentType("application/json");
+            response.setCharacterEncoding("UTF-8");
+            out.print(message);
+            out.flush();
+        }catch (Exception e){
+            log.error("unsuccessfulAuthentication response io error!!");
+        }finally {
+            assert out != null;
+            out.close();
+        }
+
+
     }
 }
