@@ -1,0 +1,40 @@
+server:
+  port: 8080
+  servlet:
+    context-path: /api/v1
+
+spring:
+  datasource:
+    driver-class-name: org.postgresql.Driver
+    url: jdbc:postgresql://localhost:5432/postgres?currentSchema=awcheetah
+    username: postgres
+    password: admin
+  flyway:
+    enabled: true
+    schemas: awcheetah
+  jpa:
+    properties:
+      hibernate:
+        default_schema: awcheetah
+        jdbc:
+          time_zone: UTC
+    show-sql: true
+
+logging:
+  pattern:
+    dateFormat: yyyy-MM-dd HH:mm:ss.SSS ZZZ
+  level:
+    com.asyncworking: debug
+
+#production env
+
+#local env
+url: http://localhost:3000
+
+
+jwt:
+  secret: securesecuresecuresecuresecuresecuresecuresecuresecuresecuresecuresecuresecuresecuresecuresecuresecuresecuresecuresecuresecure
+  secretKey: 7756adfasdfenci,,@@33$$*()sdfsdkjhsnklp999002qejf\\//asdf
+
+
+
