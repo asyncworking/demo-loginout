@@ -5,7 +5,6 @@ import com.asyncworking.dtos.AccountDto;
 import com.asyncworking.exceptions.UserNotFoundException;
 import com.asyncworking.models.Status;
 import com.asyncworking.models.UserEntity;
-import com.asyncworking.repositories.EmployeeRepository;
 import com.asyncworking.repositories.UserRepository;
 import com.asyncworking.utility.mapper.UserMapper;
 import io.jsonwebtoken.Claims;
@@ -29,7 +28,6 @@ import java.util.List;
 public class UserService {
 
     private final UserRepository userRepository;
-    private final EmployeeRepository employeeRepository;
 
     private final UserMapper userMapper;
     private final FrontEndUrlConfig frontEndUrlConfig;
@@ -122,14 +120,6 @@ public class UserService {
 
     private int activeUser(String email) {
         return userRepository.updateStatusByEmail(email, Status.ACTIVATED);
-    }
-
-    public boolean ifCompanyExits(String email) {
-        return userRepository.findEmploymentByEmail(email).isPresent();
-    }
-
-    public Long fetchCompanyId(String email) {
-        return userRepository.findEmployeesByEmail(email).get(0).getId().getCompanyId();
     }
 
     public boolean ifUnverified(String email) {

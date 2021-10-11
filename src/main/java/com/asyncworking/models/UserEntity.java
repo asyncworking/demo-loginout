@@ -50,17 +50,5 @@ public class UserEntity {
     @Column(name = "score")
     private Integer score;
 
-    @OneToMany(mappedBy = "userEntity",
-            cascade = CascadeType.ALL)
-    private Set<Employee> employees;
-
-    public void addEmployee(Employee employee) {
-        employees.add(employee);
-    }
-
-    public void removeEmployee(Employee employee) {
-        employees.remove(employee);
-    }
-
 
 }

@@ -29,15 +29,6 @@ public class UserController {
         return ResponseEntity.ok("success");
     }
 
-    @GetMapping("/company")
-    public ResponseEntity verifyCompany(@RequestParam(value = "email") String email) {
-        log.info(email);
-        if (userService.ifCompanyExits(email)){
-            return ResponseEntity.ok(userService.fetchCompanyId(email));
-        }
-        return new ResponseEntity<>("first login", HttpStatus.NO_CONTENT);
-    }
-
     @GetMapping("/signup")
     public ResponseEntity<String> verifyEmailExists(@RequestParam(value = "email") String email) {
         if (userService.ifEmailExists(email)) {

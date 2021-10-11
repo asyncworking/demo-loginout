@@ -1,6 +1,5 @@
 package com.asyncworking.repositories;
 
-import com.asyncworking.models.Employee;
 import com.asyncworking.models.UserEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
@@ -31,12 +30,6 @@ public interface UserRepository extends JpaRepository<UserEntity, Long> {
     @Modifying
     @Query("update UserEntity u set u.status = :status where u.email = :email")
     int updateStatusByEmail(@Param("email") String email, @Param("status") Enum status);
-
-    @Query("select u from UserEntity u join fetch u.employees where u.email = :email")
-    Optional<UserEntity> findEmploymentByEmail(@Param("email") String email);
-
-    @Query("select e from Employee e join fetch e.userEntity u where u.email = :email")
-    List<Employee> findEmployeesByEmail(@Param("email") String email);
 
     Optional<List<UserEntity>> findByIdIn(List<Long> id);
 
