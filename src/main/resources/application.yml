@@ -6,16 +6,16 @@ server:
 spring:
   datasource:
     driver-class-name: org.postgresql.Driver
-    url: jdbc:postgresql://localhost:5432/postgres?currentSchema=awcheetah
+    url: jdbc:postgresql://localhost:5432/postgres?currentSchema=demo
     username: postgres
     password: admin
   flyway:
     enabled: true
-    schemas: awcheetah
+    schemas: demo
   jpa:
     properties:
       hibernate:
-        default_schema: awcheetah
+        default_schema: demo
         jdbc:
           time_zone: UTC
     show-sql: true

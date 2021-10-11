@@ -26,7 +26,6 @@ Open localhost:{PORT} in browser (default port 8002). You can customise the {POR
 ports:
     - <PORT>:80
 ```
-Use default email: asyncworking@chui.com and password: admin to login. You can customise the email and password in docker-compose.yml, line 26 as following:
 ```
 environment:
       PGADMIN_DEFAULT_EMAIL: {EMAIL}
